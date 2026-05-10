@@ -1,0 +1,53 @@
+{
+  "name": "Dixxi AI",
+  "short_name": "Dixxi AI",
+  "description": "Your Personal AI Universe - Chat with AI bots",
+  "start_url": "https://dixa-crypto.github.io/Dixxi-ai/index.html",
+  "scope": "https://dixa-crypto.github.io/Dixxi-ai/",
+  "display": "fullscreen",
+  "background_color": "#000a0f",
+  "theme_color": "#000a0f",
+  "orientation": "portrait-primary",
+  "id": "dixxi-ai-app",
+  "lang": "en-US",
+  "categories": [
+    "entertainment",
+    "social"
+  ],
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "https://dixa-crypto.github.io/Dixxi-ai/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Dixxi AI"
+    }
+  ],
+  "icons": [
+    {
+      "src": "https://dixa-crypto.github.io/Dixxi-ai/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://dixa-crypto.github.io/Dixxi-ai/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "https://dixa-crypto.github.io/Dixxi-ai/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://dixa-crypto.github.io/Dixxi-ai/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
