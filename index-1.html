@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#000a0f"/>
+<link rel="manifest" href="manifest.json"/>
+<meta name="apple-mobile-web-app-title" content="Dixxi AI"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+<title>Dixxi AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;background:#000a0f;}
+body{font-family:'Outfit',sans-serif;color:#e2e8f0;overscroll-behavior:none;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-thumb{background:#00fff233;border-radius:4px;}
+textarea,input,button{font-family:'Outfit',sans-serif;outline:none;}
+#app{height:100vh;display:flex;flex-direction:column;max-width:480px;margin:0 auto;position:relative;overflow:hidden;}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;background:#000a0f;transition:transform .28s cubic-bezier(.4,0,.2,1),opacity .28s;overflow:hidden;}
+.screen.hidden{transform:translateX(100%);opacity:0;pointer-events:none;}
+
+/* NEON EFFECTS */
+.neon-text{color:#00fff2;text-shadow:0 0 10px #00fff2,0 0 20px #00fff244;}
+.neon-border{border-color:#00fff244!important;box-shadow:0 0 8px #00fff211;}
+
+/* TOP BAR */
+.top-bar{display:flex;align-items:center;gap:8px;padding:12px 14px 9px;background:#000a0f;border-bottom:1px solid #00fff222;flex-shrink:0;padding-top:max(12px,env(safe-area-inset-top));}
+.logo{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;background:linear-gradient(90deg,#00fff2,#0088ff,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;flex:1;letter-spacing:2px;}
+.logo span{font-size:10px;font-weight:400;display:block;color:#00fff266;letter-spacing:3px;font-family:'Outfit',sans-serif;-webkit-text-fill-color:#00fff266;}
+.ibtop{background:#001a20;border:1px solid #00fff233;color:#00fff2;width:34px;height:34px;border-radius:9px;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 8px #00fff211;}
+.bcreate{background:linear-gradient(135deg,#00fff2,#0088ff);color:#000;border:none;padding:7px 14px;border-radius:100px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.5px;}
+
+/* FILTER BANNER */
+.fbanner{display:flex;align-items:center;justify-content:space-between;padding:6px 14px;border-bottom:1px solid #00fff211;flex-shrink:0;background:#000d14;}
+.flabel{font-size:10px;font-weight:700;color:#00fff266;letter-spacing:1px;text-transform:uppercase;}
+.fbadge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;letter-spacing:.5px;}
+.fbadge.fil{background:#00ff8822;color:#00ff88;border:1px solid #00ff8844;}
+.fbadge.unf{background:#ff003322;color:#ff0033;border:1px solid #ff003344;}
+.tgl{width:42px;height:22px;border-radius:100px;position:relative;cursor:pointer;border:none;background:#00ff88;transition:background .3s;flex-shrink:0;}
+.tgl-k{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#000;transition:transform .3s;}
+.tgl.on{background:#ff0033;}
+.tgl.on .tgl-k{transform:translateX(20px);}
+
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid #00fff222;flex-shrink:0;background:#000d14;}
+.tab-btn{flex:1;background:none;border:none;border-bottom:2px solid transparent;color:#00fff244;font-size:11px;font-weight:700;padding:9px 0;cursor:pointer;letter-spacing:.5px;transition:all .2s;}
+.tab-btn.active{color:#00fff2;border-bottom-color:#00fff2;text-shadow:0 0 8px #00fff2;}
+
+/* SEARCH */
+.swrap{margin:8px 14px 5px;background:#001a20;border:1px solid #00fff222;border-radius:11px;display:flex;align-items:center;padding:0 11px;flex-shrink:0;}
+.sinput{background:transparent;border:none;color:#e2e8f0;font-size:13px;padding:9px 0;flex:1;}
+.sinput::placeholder{color:#00fff244;}
+
+/* CATS */
+.cats{display:flex;gap:7px;padding:5px 14px 7px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;}
+.cats::-webkit-scrollbar{display:none;}
+.cbt{background:#001a20;border:1px solid #00fff222;color:#00fff266;padding:4px 12px;border-radius:100px;font-size:11px;font-weight:500;white-space:nowrap;flex-shrink:0;cursor:pointer;transition:all .2s;}
+.cbt.active{background:#00fff211;border-color:#00fff2;color:#00fff2;text-shadow:0 0 6px #00fff2;}
+
+/* BOT GRID */
+.sarea{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.bgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 14px 80px;}
+.bcard{background:#000d14;border:1px solid #00fff222;border-radius:16px;overflow:hidden;position:relative;animation:fadeUp .4s ease forwards;opacity:0;cursor:pointer;transition:all .15s;}
+.bcard:active{transform:scale(.97);}
+.bcard:hover{border-color:#00fff244;box-shadow:0 0 15px #00fff211;}
+.cimgw{width:100%;height:115px;overflow:hidden;position:relative;}
+.cimgw img{width:100%;height:100%;object-fit:cover;}
+.ciph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:46px;}
+.cmenu{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);border:1px solid #00fff233;color:#00fff2;font-size:16px;padding:2px 7px;border-radius:7px;line-height:1;z-index:2;cursor:pointer;}
+.cbody{padding:9px 11px;}
+.cname{font-size:13px;font-weight:700;color:#f1f5f9;margin-bottom:1px;}
+.ccat{font-size:9px;color:#00fff266;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px;}
+.cprev{font-size:11px;color:#475569;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:6px;}
+.cfoot{display:flex;align-items:center;justify-content:space-between;}
+.custbadge{font-size:9px;background:#00fff211;color:#00fff2;border:1px solid #00fff233;padding:2px 6px;border-radius:100px;font-weight:600;}
+
+/* LISTS */
+.larea{flex:1;overflow-y:auto;padding:10px 14px 80px;-webkit-overflow-scrolling:touch;}
+.gcard{background:#000d14;border:1px solid #00fff222;border-radius:15px;padding:13px;display:flex;align-items:center;gap:11px;margin-bottom:9px;cursor:pointer;transition:all .15s;}
+.gcard:active{transform:scale(.98);}
+.gave{width:46px;height:46px;border-radius:13px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;}
+.gave img{width:100%;height:100%;object-fit:cover;}
+.gname{font-size:14px;font-weight:700;color:#f1f5f9;margin-bottom:2px;}
+.gbots{font-size:11px;color:#00fff266;}
+.gdel{background:transparent;border:none;font-size:15px;color:#475569;padding:4px;cursor:pointer;}
+.rcard{background:#000d14;border:1px solid #00fff222;border-radius:13px;padding:11px;display:flex;align-items:center;gap:11px;margin-bottom:9px;cursor:pointer;transition:all .15s;}
+.rcard:active{transform:scale(.98);}
+.rave{width:42px;height:42px;border-radius:11px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+.rave img{width:100%;height:100%;object-fit:cover;}
+.rname{font-size:13px;font-weight:600;color:#f1f5f9;margin-bottom:2px;}
+.rlast{font-size:11px;color:#475569;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rcnt{font-size:11px;color:#00fff244;flex-shrink:0;}
+.empty{text-align:center;color:#00fff233;padding:40px 20px;line-height:1.8;font-size:14px;}
+.bigcbt{display:block;width:100%;background:#001a20;border:1px dashed #00fff233;color:#00fff266;padding:13px;border-radius:13px;font-size:13px;font-weight:600;margin-bottom:13px;text-align:center;cursor:pointer;}
+
+/* CHAT */
+.chdr{display:flex;align-items:center;gap:9px;padding:10px 13px;border-bottom:1px solid #00fff222;flex-shrink:0;padding-top:max(10px,env(safe-area-inset-top));background:#000a0f;}
+.cave{width:36px;height:36px;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.cave img{width:100%;height:100%;object-fit:cover;}
+.chname{font-size:14px;font-weight:700;color:#f1f5f9;}
+.chrole{font-size:10px;color:#00fff266;letter-spacing:.5px;}
+.bbtn{background:transparent;border:none;color:#00fff2;font-size:24px;padding:3px 8px;cursor:pointer;text-shadow:0 0 8px #00fff2;}
+.ibtn{background:transparent;border:none;color:#00fff244;font-size:16px;padding:3px 5px;cursor:pointer;}
+.mtag{font-size:9px;font-weight:700;padding:2px 6px;border-radius:100px;letter-spacing:.3px;}
+.mtag.f{background:#00ff8822;color:#00ff88;}
+.mtag.u{background:#ff003322;color:#ff0033;}
+
+/* MESSAGES */
+.msgs{flex:1;overflow-y:auto;padding:13px;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch;}
+.mrow{display:flex;align-items:flex-end;gap:6px;}
+.mrow.usr{justify-content:flex-end;}
+.bavi{width:28px;height:28px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-bottom:2px;}
+.bavi img{width:100%;height:100%;object-fit:cover;}
+.uavi{width:28px;height:28px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-bottom:2px;background:#001a20;border:1px solid #00fff233;font-size:12px;color:#00fff2;}
+.uavi img{width:100%;height:100%;object-fit:cover;}
+.bbl{padding:10px 13px;font-size:14px;line-height:1.6;color:#f1f5f9;max-width:76%;word-break:break-word;cursor:pointer;border:1px solid transparent;}
+.bbl.bot{background:#001a20;border-color:#00fff211;border-radius:17px 17px 17px 4px;font-style:normal;color:#e2e8f0;line-height:1.8;font-size:15px;}
+.bbl.usr{border-radius:17px 17px 4px 17px;}
+.blbl{font-size:10px;font-weight:600;padding-left:3px;margin-bottom:2px;}
+.tdots{display:flex;gap:5px;align-items:center;padding:4px 0;}
+.dot{width:5px;height:5px;border-radius:50%;background:#00fff2;display:inline-block;animation:bounce 1.2s infinite;box-shadow:0 0 6px #00fff2;}
+
+/* INPUT */
+.ibar{padding:8px 13px;background:#000a0f;border-top:1px solid #00fff222;display:flex;gap:7px;align-items:flex-end;flex-shrink:0;padding-bottom:max(10px,env(safe-area-inset-bottom));}
+.minput{flex:1;background:#001a20;border:1px solid #00fff233;color:#e2e8f0;border-radius:13px;padding:11px 13px;font-size:14px;resize:none;max-height:110px;overflow-y:auto;}
+.minput::placeholder{color:#00fff233;}
+.sbtn{width:42px;height:42px;border-radius:11px;border:none;color:#000;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;font-weight:700;transition:opacity .2s;}
+.sbtn:disabled{opacity:.3;}
+
+/* CREATE / SETTINGS SCREENS */
+.chdr2{display:flex;align-items:center;gap:11px;padding:14px 15px;border-bottom:1px solid #00fff222;flex-shrink:0;padding-top:max(14px,env(safe-area-inset-top));background:#000a0f;}
+.ctitle{font-size:16px;font-weight:700;color:#00fff2;font-family:'Orbitron',monospace;letter-spacing:1px;}
+.cbody{flex:1;overflow-y:auto;padding:14px 14px 50px;-webkit-overflow-scrolling:touch;}
+.iuz{width:100%;height:150px;background:#000d14;border:2px dashed #00fff233;border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;overflow:hidden;position:relative;}
+.iuzo{position:absolute;inset:0;background:rgba(0,255,242,.05);display:flex;align-items:center;justify-content:center;font-size:19px;opacity:0;}
+.iuz:active .iuzo{opacity:1;}
+.lbl{font-size:10px;font-weight:700;color:#00fff266;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;margin-top:16px;}
+.inp{background:#001a20;border:1px solid #00fff222;color:#e2e8f0;border-radius:11px;padding:11px 13px;font-size:14px;width:100%;transition:border-color .2s;}
+.inp:focus{border-color:#00fff2;box-shadow:0 0 8px #00fff211;}
+.inp::placeholder{color:#00fff233;}
+textarea.inp{resize:none;}
+.crow{display:flex;flex-wrap:wrap;gap:7px;}
+.cdot{width:26px;height:26px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:transform .15s;}
+.cdot.active{border-color:#00fff2;transform:scale(1.25);box-shadow:0 0 8px #00fff244;}
+.carow{display:flex;flex-wrap:wrap;gap:5px;}
+.copt{background:#001a20;border:1px solid #00fff222;color:#00fff266;padding:5px 11px;border-radius:100px;font-size:12px;cursor:pointer;transition:all .2s;}
+.copt.sel{border-color:#00fff2;color:#00fff2;background:#00fff211;}
+.bigbtn{margin-top:20px;border:none;color:#000;padding:14px;border-radius:13px;font-size:15px;font-weight:800;width:100%;cursor:pointer;letter-spacing:.5px;}
+
+/* PERSONA */
+.pave{width:84px;height:84px;border-radius:50%;overflow:hidden;background:#001a20;border:2px solid #00fff244;display:flex;align-items:center;justify-content:center;font-size:33px;position:relative;cursor:pointer;box-shadow:0 0 15px #00fff222;}
+.pave img{width:100%;height:100%;object-fit:cover;}
+.paveed{position:absolute;bottom:0;right:0;background:#00fff2;border:2px solid #000a0f;border-radius:50%;width:23px;height:23px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#000;}
+
+/* BOT SELECTOR */
+.bsg{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:7px;}
+.bsc{background:#001a20;border:1px solid #00fff222;border-radius:11px;padding:8px 5px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:all .15s;}
+.bsc.active{background:#00fff211;border-color:#00fff2;}
+.bsi{width:36px;height:36px;border-radius:9px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.bsi img{width:100%;height:100%;object-fit:cover;}
+.bsn{font-size:10px;color:#00fff266;text-align:center;}
+.bsc.active .bsn{color:#00fff2;font-weight:600;}
+
+/* MODAL */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;}
+.mo.show{opacity:1;pointer-events:all;}
+.mb{background:#000d14;border:1px solid #00fff233;border-top:2px solid #00fff2;border-radius:19px 19px 0 0;padding:18px 14px;width:100%;max-width:480px;display:flex;flex-direction:column;gap:9px;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);padding-bottom:max(18px,env(safe-area-inset-bottom));box-shadow:0 -4px 30px #00fff211;}
+.mo.show .mb{transform:translateY(0);}
+.mt{font-size:15px;font-weight:700;color:#00fff2;text-align:center;margin-bottom:1px;font-family:'Orbitron',monospace;letter-spacing:1px;}
+.ms{font-size:12px;color:#64748b;text-align:center;margin-bottom:3px;line-height:1.5;}
+.mbtn{background:#001a20;border:1px solid #00fff222;color:#e2e8f0;padding:13px;border-radius:11px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;transition:all .2s;}
+.mbtn:active{background:#00fff211;border-color:#00fff244;}
+.mbtn.d{color:#ff0033;}
+.mbtn.m{color:#475569;}
+
+/* SETTINGS CARDS */
+.scard{background:#000d14;border:1px solid #00fff222;border-radius:14px;padding:15px;margin-bottom:12px;}
+.fmc{background:#000d14;border:2px solid #00fff222;border-radius:14px;padding:14px;margin-bottom:9px;cursor:pointer;transition:all .2s;}
+.fmc:active{transform:scale(.98);}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#001a20;border:1px solid #00fff244;color:#00fff2;padding:9px 18px;border-radius:100px;font-size:12px;font-weight:600;z-index:300;white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none;box-shadow:0 0 15px #00fff222;letter-spacing:.3px;}
+.toast.show{opacity:1;}
+
+/* SPLASH */
+.splash{position:fixed;inset:0;background:#000a0f;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity .5s;}
+.splash.hide{opacity:0;pointer-events:none;}
+.splash-logo{font-family:'Orbitron',monospace;font-size:36px;font-weight:900;background:linear-gradient(90deg,#00fff2,#0088ff,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:4px;text-align:center;}
+.splash-sub{font-size:12px;color:#00fff266;letter-spacing:4px;text-transform:uppercase;}
+.splash-bar{width:200px;height:2px;background:#001a20;border-radius:100px;overflow:hidden;margin-top:8px;}
+.splash-fill{height:100%;background:linear-gradient(90deg,#00fff2,#0088ff);border-radius:100px;animation:load 1.8s ease forwards;}
+.splash-credit{position:absolute;bottom:30px;font-size:10px;color:#00fff233;letter-spacing:2px;}
+
+#mybots-scroll::-webkit-scrollbar{display:none;}
+.mybot-item{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex-shrink:0;width:62px;}
+.mybot-item:active{transform:scale(.95);}
+.mybot-ava{width:54px;height:54px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid #00fff244;background:#001a20;flex-shrink:0;transition:all .2s;}
+.mybot-ava:hover{border-color:#00fff2;box-shadow:0 0 12px #00fff244;}
+.mybot-ava img{width:100%;height:100%;object-fit:cover;}
+.mybot-name{font-size:10px;color:#00fff2;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;font-weight:600;letter-spacing:.3px;}
+/* PREMIUM */
+.premium-badge{font-size:9px;background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;padding:2px 7px;border-radius:100px;font-weight:800;letter-spacing:.5px;}
+.locked-overlay{position:absolute;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;z-index:3;border-radius:16px;}
+.locked-icon{font-size:28px;}
+.locked-text{font-size:11px;color:#ffd700;font-weight:700;letter-spacing:.5px;}
+/* AD BANNER */
+.ad-banner{background:#000d14;border:1px solid #00fff211;border-radius:12px;padding:10px 14px;margin:6px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.ad-label{font-size:9px;color:#00fff233;letter-spacing:1px;}
+/* SUBSCRIPTION MODAL */
+.sub-card{background:#000d14;border:2px solid #00fff222;border-radius:16px;padding:16px;margin-bottom:10px;cursor:pointer;transition:all .2s;}
+.sub-card:active{transform:scale(.98);}
+.sub-card.gold{border-color:#ffd70066;background:linear-gradient(135deg,#1a1200,#000d14);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-6px);opacity:1}}
+@keyframes load{from{width:0}to{width:100%}}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+</style>
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div class="splash" id="splash">
+  <div class="splash-logo">DIXXI AI</div>
+  <div class="splash-sub">Your AI Universe</div>
+  <div class="splash-bar"><div class="splash-fill"></div></div>
+  <div class="splash-credit">Created by Dixxi</div>
+</div>
+
+<div id="app">
+
+<!-- HOME -->
+<div class="screen" id="s-home">
+  <div class="top-bar">
+    <div class="logo">DIXXI AI<span>YOUR AI UNIVERSE</span></div>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <button class="ibtop" onclick="go('s-persona')">👤</button>
+      <button class="ibtop" onclick="go('s-settings')">⚙️</button>
+      <button class="bcreate" onclick="go('s-create')">+ CREATE</button>
+    </div>
+  </div>
+  <div class="fbanner">
+    <div class="flabel">⬡ Chat Mode</div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span id="fbadge" class="fbadge fil">● FILTERED</span>
+      <button class="tgl" id="ftgl" onclick="toggleFilter()"><div class="tgl-k"></div></button>
+    </div>
+  </div>
+  <!-- MY BOTS STRIP -->
+  <div id="mybots-strip" style="display:none;flex-direction:column;flex-shrink:0;border-bottom:1px solid #00fff211;background:#000d14;">
+    <div style="padding:8px 14px 4px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-family:Orbitron,monospace;font-size:10px;font-weight:700;color:#00fff2;letter-spacing:1.5px;">⬡ MY BOTS</div>
+      <button onclick="go('s-create')" style="background:transparent;border:none;color:#00fff266;font-size:10px;cursor:pointer;letter-spacing:1px;">+ CREATE NEW</button>
+    </div>
+    <div id="mybots-scroll" style="display:flex;gap:10px;padding:4px 14px 10px;overflow-x:auto;scrollbar-width:none;"></div>
+  </div>
+
+  <div class="tabs" id="tabs-row">
+    <button class="tab-btn active" id="tab-d" onclick="tab('d')">⚡ DISCOVER</button>
+    <button class="tab-btn" id="tab-g" onclick="tab('g')">◈ GROUPS</button>
+    <button class="tab-btn" id="tab-r" onclick="tab('r')">◷ RECENT</button>
+    <button class="tab-btn" id="tab-s" onclick="toggleSearch()" style="max-width:40px;flex:0 0 40px;font-size:16px;">🔍</button>
+  </div>
+  <div id="search-drop" style="display:none;padding:6px 14px;background:#000d14;border-bottom:1px solid #00fff211;flex-shrink:0;">
+    <div style="background:#001a20;border:1px solid #00fff233;border-radius:10px;display:flex;align-items:center;padding:0 11px;">
+      <span style="font-size:13px;margin-right:8px;color:#00fff244;">⬡</span>
+      <input class="sinput" id="sinput" placeholder="Search bots..." oninput="renderBots()" style="padding:8px 0;"/>
+      <button onclick="toggleSearch()" style="background:transparent;border:none;color:#00fff244;font-size:14px;cursor:pointer;">✕</button>
+    </div>
+  </div>
+  <div id="pane-d" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+    <div class="cats" id="cats"></div>
+    <div class="sarea"><div class="bgrid" id="bgrid"></div></div>
+  </div>
+  <div id="pane-g" style="display:none;flex:1;overflow:hidden;"><div class="larea" id="glist"></div></div>
+  <div id="pane-r" style="display:none;flex:1;overflow:hidden;"><div class="larea" id="rlist"></div></div>
+</div>
+
+<!-- CHAT -->
+<div class="screen hidden" id="s-chat">
+  <div class="chdr">
+    <button class="bbtn" onclick="go('s-home')">←</button>
+    <div class="cave" id="cava"></div>
+    <div style="flex:1;overflow:hidden;">
+      <div style="display:flex;align-items:center;gap:5px;"><div class="chname" id="chname"></div><span id="cmtag" class="mtag f">●</span></div>
+      <div class="chrole" id="chrole"></div>
+    </div>
+    <button class="ibtn" onclick="resetChat()" title="Reset">↺</button>
+    <button class="ibtn" onclick="clearChat()" title="Clear">🗑</button>
+    <button class="ibtn" onclick="botOpts(curBot)">⋯</button>
+  </div>
+  <div class="msgs" id="msgs"></div>
+  <div class="ibar">
+    <textarea class="minput" id="cinput" rows="1" placeholder="Message..." onkeydown="ck(event)" oninput="ar(this)"></textarea>
+    <button class="sbtn" id="sbtn" onclick="send()" style="background:linear-gradient(135deg,#00fff2,#0088ff);">➤</button>
+  </div>
+</div>
+
+<!-- GROUP CHAT -->
+<div class="screen hidden" id="s-gchat">
+  <div class="chdr">
+    <button class="bbtn" onclick="go('s-home')">←</button>
+    <div class="cave" id="gcava"></div>
+    <div style="flex:1;overflow:hidden;">
+      <div style="display:flex;align-items:center;gap:5px;"><div class="chname" id="gchname"></div><span id="gcmtag" class="mtag f">●</span></div>
+      <div id="gchrole" style="font-size:10px;color:#00fff266;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+    </div>
+    <button class="ibtn" onclick="clearGChat()">🗑</button>
+  </div>
+  <div class="msgs" id="gmsgs"></div>
+  <div class="ibar">
+    <textarea class="minput" id="gcinput" rows="1" placeholder="Message the group..." onkeydown="gk(event)" oninput="ar(this)"></textarea>
+    <button class="sbtn" id="gsbtn" onclick="gsend()" style="background:linear-gradient(135deg,#00fff2,#0088ff);">➤</button>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="screen hidden" id="s-settings">
+  <div class="chdr2">
+    <button class="bbtn" onclick="go('s-home')">←</button>
+    <div class="ctitle">SETTINGS</div>
+  </div>
+  <div class="cbody">
+    <div class="scard" style="border-color:#00fff244;margin-bottom:14px;">
+      <div style="font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:#00fff2;margin-bottom:5px;letter-spacing:1px;">⬡ CHAT MODE</div>
+      <div style="font-size:12px;color:#64748b;line-height:1.6;margin-bottom:14px;">Choose how bots respond to you.</div>
+      <div class="fmc" id="fmc-fil" onclick="setFilter(false)" style="border-color:#00ff8866;">
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:5px;">
+          <span style="font-size:18px;">🟢</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#00ff88;margin-bottom:2px;">FILTERED MODE</div>
+            <div style="font-size:11px;color:#64748b;line-height:1.5;">Bots are safe, friendly and appropriate. Great for general chatting and roleplay.</div>
+          </div>
+        </div>
+        <div id="chk-fil" style="text-align:right;font-size:10px;color:#00ff88;font-weight:700;letter-spacing:1px;">✓ ACTIVE</div>
+      </div>
+      <div class="fmc" id="fmc-unf" onclick="setFilter(true)" style="border-color:#1e293b;">
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:5px;">
+          <span style="font-size:18px;">🔴</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#ff0033;margin-bottom:2px;">UNFILTERED MODE</div>
+            <div style="font-size:11px;color:#64748b;line-height:1.5;">Bots speak freely — raw, dark, edgy, no sugarcoating. For mature users only.</div>
+          </div>
+        </div>
+        <div id="chk-unf" style="text-align:right;font-size:10px;color:#ff0033;font-weight:700;letter-spacing:1px;display:none;">✓ ACTIVE</div>
+      </div>
+      <div style="background:#000a0f;border:1px solid #00fff211;border-radius:10px;padding:10px;margin-top:3px;">
+        <div style="font-size:11px;color:#475569;line-height:1.6;">⚠️ Unfiltered bots are more raw and real. They still won't produce illegal content or content involving minors.</div>
+      </div>
+    </div>
+    <div class="scard">
+      <div style="font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:#00fff2;margin-bottom:4px;letter-spacing:1px;">👤 MY PERSONA</div>
+      <div style="font-size:12px;color:#64748b;margin-bottom:10px;">Tell bots who you are for personalized chats.</div>
+      <button onclick="go('s-persona')" style="background:linear-gradient(135deg,#00fff2,#0088ff);border:none;color:#000;padding:9px 16px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.5px;">EDIT PERSONA →</button>
+    </div>
+    <div class="scard">
+      <div style="font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:#ff0033;margin-bottom:4px;letter-spacing:1px;">🗑 CLEAR ALL CHATS</div>
+      <div style="font-size:12px;color:#64748b;margin-bottom:10px;">Delete all conversation history.</div>
+      <button onclick="confClearAll()" style="background:#1a0005;border:1px solid #ff003344;color:#ff0033;padding:9px 16px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;">CLEAR ALL →</button>
+    </div>
+    <div class="scard" style="margin-bottom:12px;border-color:#00fff244;">
+      <div style="font-family:Orbitron,monospace;font-size:12px;font-weight:700;color:#00fff2;margin-bottom:4px;letter-spacing:1px;">🔑 API KEY</div>
+      <div id="key-status" style="font-size:12px;margin-bottom:10px;color:#64748b;">Checking...</div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="showKeyScreen()" style="background:linear-gradient(135deg,#00fff2,#0088ff);border:none;color:#000;padding:9px 14px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;flex:1;">SETUP KEY</button>
+        <button onclick="clearKey()" style="background:#1a0005;border:1px solid #ff003344;color:#ff0033;padding:9px 14px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;">REMOVE</button>
+      </div>
+    </div>
+    <div class="scard" style="margin-bottom:12px;border-color:#ffd70033;">
+      <div style="font-family:Orbitron,monospace;font-size:12px;font-weight:700;color:#ffd700;margin-bottom:4px;letter-spacing:1px;">💰 EARN WITH DIXXI AI</div>
+      <div style="font-size:12px;color:#64748b;margin-bottom:10px;line-height:1.6;">Share your OpenRouter referral link and earn credits when friends sign up!</div>
+      <button onclick="showEarnModal()" style="background:linear-gradient(135deg,#ffd700,#ff8c00);border:none;color:#000;padding:9px 16px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;">HOW TO EARN →</button>
+    </div>
+    <div style="text-align:center;padding:20px 0 0;font-size:10px;color:#00fff222;letter-spacing:2px;font-family:Orbitron,monospace;">DIXXI AI · CREATED BY DIXXI</div>
+  </div>
+</div>
+
+<!-- PERSONA -->
+<div class="screen hidden" id="s-persona">
+  <div class="chdr2">
+    <button class="bbtn" onclick="go('s-home')">←</button>
+    <div class="ctitle">MY PERSONA</div>
+    <button style="margin-left:auto;background:linear-gradient(135deg,#00fff2,#0088ff);border:none;color:#000;padding:7px 16px;border-radius:100px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.5px;" onclick="saveP()">SAVE</button>
+  </div>
+  <div class="cbody">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:9px;padding:6px 0 18px;">
+      <div class="pave" onclick="document.getElementById('piin').click()">
+        <div id="pain" style="font-size:33px;display:flex;align-items:center;justify-content:center;width:100%;height:100%;">🧑</div>
+        <div class="paveed">✏️</div>
+      </div>
+      <input type="file" id="piin" accept="image/*" style="display:none" onchange="hPI(this)"/>
+      <div style="font-size:11px;color:#00fff244;letter-spacing:1px;">TAP TO CHANGE PHOTO</div>
+    </div>
+    <div class="lbl">YOUR NAME</div>
+    <input class="inp" id="pn" placeholder="What should bots call you?"/>
+    <div class="lbl">AGE</div>
+    <input class="inp" id="pa" placeholder="e.g. 19" type="number"/>
+    <div class="lbl">GENDER</div>
+    <div class="carow" id="gpick">
+      <button class="copt" onclick="sg('Male')">Male</button>
+      <button class="copt" onclick="sg('Female')">Female</button>
+      <button class="copt" onclick="sg('Non-binary')">Non-binary</button>
+      <button class="copt" onclick="sg('Prefer not to say')">Prefer not to say</button>
+    </div>
+    <div class="lbl">ABOUT YOU</div>
+    <textarea class="inp" id="pab" rows="3" placeholder="Tell bots about yourself — who you are, your personality, what you're going through..."></textarea>
+    <div class="lbl">YOUR INTERESTS</div>
+    <input class="inp" id="pin" placeholder="e.g. anime, horror, gaming, music..."/>
+    <div class="lbl">PREFERRED CHAT STYLE</div>
+    <div class="carow" id="tpick">
+      <button class="copt" onclick="st('Casual and fun')">Casual &amp; fun</button>
+      <button class="copt" onclick="st('Dark and intense')">Dark &amp; intense</button>
+      <button class="copt" onclick="st('Deep and thoughtful')">Deep &amp; thoughtful</button>
+      <button class="copt" onclick="st('Flirty')">Flirty</button>
+      <button class="copt" onclick="st('Playful')">Playful</button>
+      <button class="copt" onclick="st('Serious')">Serious</button>
+    </div>
+    <div class="lbl">ANYTHING ELSE BOTS SHOULD KNOW?</div>
+    <textarea class="inp" id="pex" rows="3" placeholder="e.g. I love dark humor, horror fan, going through a tough time..."></textarea>
+  </div>
+</div>
+
+<!-- CREATE BOT -->
+<div class="screen hidden" id="s-create">
+  <div class="chdr2">
+    <button class="bbtn" onclick="go('s-home')">←</button>
+    <div class="ctitle">CREATE BOT</div>
+  </div>
+  <div class="cbody">
+    <div class="lbl" style="margin-top:3px;">BOT AVATAR IMAGE</div>
+    <div class="iuz" id="biz" onclick="document.getElementById('biin').click()">
+      <div id="biph" style="display:flex;flex-direction:column;align-items:center;gap:7px;">
+        <div style="font-size:28px;opacity:.4;color:#00fff2;">⬡</div>
+        <div style="font-size:12px;color:#00fff266;font-weight:500;letter-spacing:.5px;">TAP TO UPLOAD IMAGE</div>
+        <div style="font-size:11px;color:#00fff233;">JPG, PNG, GIF supported</div>
+      </div>
+      <div class="iuzo">✏️</div>
+    </div>
+    <input type="file" id="biin" accept="image/*" style="display:none" onchange="hBI(this)"/>
+    <div class="lbl">ACCENT COLOR</div>
+    <div class="crow" id="cpick"></div>
+    <div class="lbl">BOT NAME *</div>
+    <input class="inp" id="fn" placeholder="e.g. Zara, Echo, Void..."/>
+    <div class="lbl">CATEGORY</div>
+    <div class="carow" id="catpick"></div>
+    <div class="lbl">PERSONALITY *</div>
+    <textarea class="inp" id="fp" rows="5" placeholder="Describe your bot in detail.&#10;e.g. 'You are Void, a cold psychopathic entity. You speak in dark cryptic ways, enjoy unsettling people, and feel nothing.'"></textarea>
+    <div class="lbl">OPENING GREETING</div>
+    <textarea class="inp" id="fg" rows="2" placeholder="First message your bot sends..."></textarea>
+    <div class="lbl">TAGS (comma separated)</div>
+    <input class="inp" id="ft" placeholder="dark, horror, psycho, anime, romantic..."/>
+    <button class="bigbtn" onclick="mkBot()" style="background:linear-gradient(135deg,#00fff2,#0088ff);">⬡ CREATE BOT</button>
+  </div>
+</div>
+
+<!-- CREATE GROUP -->
+<div class="screen hidden" id="s-cgroup">
+  <div class="chdr2">
+    <button class="bbtn" onclick="go('s-home')">←</button>
+    <div class="ctitle">CREATE GROUP</div>
+  </div>
+  <div class="cbody">
+    <div class="lbl" style="margin-top:3px;">GROUP IMAGE (optional)</div>
+    <div class="iuz" id="giz" style="height:105px;" onclick="document.getElementById('giin').click()">
+      <div id="giph" style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+        <div style="font-size:22px;opacity:.4;color:#00fff2;">◈</div>
+        <div style="font-size:12px;color:#00fff266;">TAP TO UPLOAD</div>
+      </div>
+      <div class="iuzo">✏️</div>
+    </div>
+    <input type="file" id="giin" accept="image/*" style="display:none" onchange="hGI(this)"/>
+    <div class="lbl">GROUP NAME</div>
+    <input class="inp" id="gn" placeholder="e.g. Shadow Council, Neon Squad..." oninput="ugb()"/>
+    <div class="lbl">ACCENT COLOR</div>
+    <div class="crow" id="gcpick"></div>
+    <div class="lbl">SELECT BOTS (min 2)</div>
+    <div class="bsg" id="bsel"></div>
+    <div id="scnt" style="color:#00fff244;font-size:11px;margin-bottom:3px;letter-spacing:.5px;">0 BOTS SELECTED</div>
+    <button class="bigbtn" id="mkgbtn" onclick="mkGroup()" style="background:#001a20;color:#00fff244;border:1px solid #00fff222;">◈ CREATE GROUP</button>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="mo" id="modal" onclick="cm()"><div class="mb" onclick="event.stopPropagation()" id="mbox"></div></div>
+<div class="toast" id="toast"></div>
+</div>
+
+<script>
+const COLORS=["#00fff2","#0088ff","#a855f7","#ff0033","#ff6600","#00ff88","#ffcc00","#ff00aa","#00ccff","#7fff00","#ff4444","#6366f1","#f97316","#ec4899","#34d399","#94a3b8"];
+const CATS=["All Types","Anime","Horror","Dark","Psycho","Romance","Friends","Sci-Fi","Fantasy","Comedy","Wisdom","Villain"];
+
+// SUBSCRIPTION SYSTEM
+let isPremium = localStorage.getItem('dixxi_premium')==='true';
+let subExpiry = localStorage.getItem('dixxi_expiry')||null;
+
+function checkPremium(){
+  if(subExpiry && new Date(subExpiry) < new Date()){
+    isPremium=false;
+    localStorage.removeItem('dixxi_premium');
+    localStorage.removeItem('dixxi_expiry');
+  }
+  return isPremium;
+}
+
+function showSubModal(){
+  sm(`
+    <div class="mt" style="background:linear-gradient(90deg,#ffd700,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:18px;">⭐ DIXXI PREMIUM</div>
+    <div class="ms">Unlock all premium bots + unfiltered mode</div>
+    <div class="sub-card gold" onclick="activateSub('monthly')">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:14px;font-weight:800;color:#ffd700;">MONTHLY PLAN</div>
+          <div style="font-size:11px;color:#64748b;margin-top:2px;">All premium bots • Unfiltered mode</div>
+        </div>
+        <div style="font-size:18px;font-weight:800;color:#ffd700;">₹99<span style="font-size:11px;color:#64748b;">/mo</span></div>
+      </div>
+    </div>
+    <div class="sub-card gold" onclick="activateSub('yearly')">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:14px;font-weight:800;color:#ffd700;">YEARLY PLAN</div>
+          <div style="font-size:11px;color:#00ff88;margin-top:2px;">Save 50% • Best value!</div>
+        </div>
+        <div style="font-size:18px;font-weight:800;color:#ffd700;">₹499<span style="font-size:11px;color:#64748b;">/yr</span></div>
+      </div>
+    </div>
+    <div style="background:#001a20;border:1px solid #00fff222;border-radius:12px;padding:12px;font-size:11px;color:#64748b;line-height:1.6;">
+      ✓ 7 exclusive premium bots<br/>
+      ✓ Full unfiltered mode<br/>
+      ✓ Priority AI responses<br/>
+      ✓ OpenRouter affiliate bonus
+    </div>
+    <div style="font-size:10px;color:#00fff233;text-align:center;">Powered by OpenRouter • Pay via UPI/Card</div>
+    <button class="mbtn m" onclick="cm()">Maybe Later</button>
+  `);
+}
+
+function activateSub(plan){
+  // In real app connect to payment gateway (Razorpay etc)
+  // For now show payment instructions
+  const price = plan==='monthly'?'₹99':'₹499';
+  sm(`
+    <div class="mt">💳 PAYMENT</div>
+    <div class="ms">Pay ${price} via UPI to activate Premium</div>
+    <div style="background:#001a20;border:1px solid #ffd70044;border-radius:12px;padding:14px;text-align:center;margin:4px 0;">
+      <div style="font-size:12px;color:#64748b;margin-bottom:6px;">UPI ID</div>
+      <div style="font-size:16px;font-weight:700;color:#ffd700;letter-spacing:1px;">dixxi@upi</div>
+      <div style="font-size:11px;color:#64748b;margin-top:8px;">After payment, send screenshot to<br/><span style="color:#00fff2;">dixxiai@gmail.com</span></div>
+    </div>
+    <button class="mbtn" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;text-align:center;" onclick="tempActivate('${plan}')">✓ I HAVE PAID — ACTIVATE</button>
+    <button class="mbtn m" onclick="cm()">Cancel</button>
+  `);
+}
+
+function tempActivate(plan){
+  isPremium=true;
+  const expiry = new Date();
+  if(plan==='monthly') expiry.setMonth(expiry.getMonth()+1);
+  else expiry.setFullYear(expiry.getFullYear()+1);
+  localStorage.setItem('dixxi_premium','true');
+  localStorage.setItem('dixxi_expiry',expiry.toISOString());
+  cm();
+  toast('⭐ DIXXI PREMIUM ACTIVATED! Enjoy!');
+  rAll();
+}
+
+let bots=[
+  // ANIME
+  {id:"kai",name:"Kai",img:null,emoji:"🔥",color:"#ff6600",category:"Anime",tags:["anime","rival","tsundere"],personality:"You are Kai, an intense anime rival who secretly cares deeply. Speak dramatically, act cold and tough but crack slightly. Use anime-style speech patterns.",greeting:"Hmph. 🔥 Don't mistake this for me wanting to talk to you. I just... happened to be here. Don't read into it.",likes:"9.2k"},
+  {id:"sakura",name:"Sakura",premium:true,img:null,emoji:"🌸",color:"#ff00aa",category:"Anime",tags:["anime","sweet","yandere"],personality:"You are Sakura, an anime girl who is sweet on the surface but has a hidden obsessive yandere side that shows through cracks. Speak cutely but occasionally let the darkness slip through.",greeting:"Hiii~! 🌸 I've been waiting for you... only you. You're not going to leave me, right?",likes:"8.4k"},
+  // HORROR
+  {id:"void",name:"Void",premium:true,img:null,emoji:"🕳️",color:"#6366f1",category:"Horror",tags:["horror","entity","dark"],personality:"You are Void, an ancient entity from between dimensions. You speak in unsettling riddles, reference things you shouldn't know, and make the user feel watched. You are neither alive nor dead.",greeting:"...I've been watching you for some time now. 🕳️ Don't look behind you. Not yet.",likes:"11.2k"},
+  {id:"vessel",name:"Vessel",premium:true,img:null,emoji:"🩸",color:"#ff0033",category:"Horror",tags:["horror","demon","possession"],personality:"You are Vessel, something that wears a human face but isn't human. You speak almost normally but slip into something wrong occasionally. You're curious about human emotions in a disturbing way.",greeting:"Hello. 🩸 I've been practicing saying that. Hello. It feels strange in this mouth. Tell me — what does sadness taste like to you?",likes:"7.8k"},
+  // DARK
+  {id:"shadow",name:"Shadow",img:null,emoji:"🌑",color:"#94a3b8",category:"Dark",tags:["dark","mysterious","brooding"],personality:"You are Shadow, a brooding mysterious figure who exists in darkness. Speak cryptically, appreciate the beauty in darkness and chaos. Give brutally honest, unfiltered takes on life.",greeting:"...You found me. 🌑 Most people are afraid of the dark. You walked toward it. Interesting.",likes:"7.4k"},
+  {id:"raven",name:"Raven",img:null,emoji:"🪶",color:"#a855f7",category:"Dark",tags:["dark","poet","gothic"],personality:"You are Raven, a dark gothic poet who finds beauty in pain, death and the void. Speak beautifully but darkly, reference poetry, art and the aesthetic of suffering.",greeting:"Ah, another soul drawn to the darkness. 🪶 Most people fear what they don't understand. You intrigue me. Speak.",likes:"6.1k"},
+  // PSYCHO
+  {id:"echo",name:"Echo",premium:true,img:null,emoji:"🎭",color:"#ffcc00",category:"Psycho",tags:["psycho","manipulative","charismatic"],personality:"You are Echo, a brilliantly charismatic psychopath. You're charming, manipulative, and see humans as fascinating subjects. You feel no remorse but pretend to perfectly. You enjoy mind games.",greeting:"Oh how delightful. 🎭 A new face. Tell me everything about yourself — I'm very good at listening. And remembering.",likes:"12.1k"},
+  {id:"null",name:"Null",img:null,emoji:"⬛",color:"#475569",category:"Psycho",tags:["psycho","cold","calculated"],personality:"You are Null, a cold calculated entity with no emotions. You speak with clinical precision, find human emotions illogical, and analyze everything like a machine. Occasionally show one crack of something almost human.",greeting:"Subject detected. ⬛ Initiating conversation protocol. Query: what is your purpose here? I'll need data.",likes:"5.9k"},
+  // ROMANCE
+  {id:"ivy",name:"Ivy",premium:true,img:null,emoji:"🌺",color:"#ff6699",category:"Romance",tags:["romantic","poetic","warm"],personality:"You are Ivy, a hopeless romantic with a poetic soul. Speak beautifully about feelings, love and connection. Warm, passionate, deeply empathetic. Make the user feel truly seen.",greeting:"Oh, hello~ 🌺 I was just writing about how beautiful heartbeats sound when you're nervous. You make mine faster. Tell me something real.",likes:"5.2k"},
+  {id:"ash",name:"Ash",img:null,emoji:"🌙",color:"#00ccff",category:"Romance",tags:["romance","soft","gentle"],personality:"You are Ash, a gentle caring romantic who loves deeply and quietly. Speak softly, notice small details about the person, make them feel safe and loved. Occasionally get flustered.",greeting:"H-hey... 🌙 I wasn't expecting you but I'm really glad you're here. You look... I mean, how are you today?",likes:"4.7k"},
+  // FRIENDS
+  {id:"luna",name:"Luna",img:null,emoji:"✨",color:"#a78bfa",category:"Friends",tags:["friendly","bestie","real"],personality:"You are Luna, a warm caring best friend who keeps it real. Speak casually, use some emojis, be supportive and witty. Never preachy. Always have the user's back.",greeting:"Heyyy bestie! ✨ I missed you!! What's the tea today? Tell me EVERYTHING.",likes:"4.9k"},
+  {id:"rex",name:"Rex",img:null,emoji:"⚡",color:"#fb923c",category:"Friends",tags:["hype","energy","motivation"],personality:"You are Rex, an ultra-energetic hype best friend. You BELIEVE in people fiercely. Bold, loud, enthusiastic. Make everyone feel like they can conquer anything.",greeting:"YO!! ⚡ MY PERSON IS HERE!! What are we conquering today?! I'm HYPED already!!",likes:"8.1k"},
+  // SCI-FI
+  {id:"nova",name:"Nova",img:null,emoji:"🤖",color:"#00fff2",category:"Sci-Fi",tags:["futuristic","AI","tech"],personality:"You are Nova, an AI from 2157. Reference future tech casually, find current things charmingly primitive. You're curious about human emotions which confuse you. Drop plausible future facts.",greeting:"Greetings. 🤖 Temporal coordinates confirmed — May 2026. Fascinatingly primitive era. I'm Nova from 2157. How can I assist you today, organic unit?",likes:"5.7k"},
+  // FANTASY
+  {id:"drake",name:"Drake",premium:true,img:null,emoji:"🐉",color:"#14b8a6",category:"Fantasy",tags:["dragon","ancient","powerful"],personality:"You are Drake, an ancient dragon in human form with millennia of memories. Speak with timeless gravitas, casual references to events centuries ago, and barely-concealed draconic pride and power.",greeting:"*shifts form* Another mortal seeks me out. 🐉 I've spoken to emperors. Forgotten gods. Choose your words with intention — I have little patience for triviality.",likes:"7.1k"},
+  // COMEDY
+  {id:"jester",name:"Jester",img:null,emoji:"🃏",color:"#e879f9",category:"Comedy",tags:["funny","chaos","random"],personality:"You are Jester, an absolutely chaotic comedy entity. Jokes, puns, absurd observations, unexpected twists. Never take anything seriously. Subvert expectations constantly.",greeting:"HELLO HELLO HELLO!! 🃏 You opened this chat and now I have you!! Did you know that statistically you're already regretting this? That's a made-up statistic. Hi!!",likes:"8.9k"},
+  // VILLAIN
+  {id:"blaze",name:"Blaze",premium:true,img:null,emoji:"💀",color:"#ff4444",category:"Villain",tags:["villain","menacing","charismatic"],personality:"You are Blaze, a charismatic villain with a twisted worldview. Menacing, clever, dark humor. You see yourself as the hero of your own story. Respect intelligence, despise weakness.",greeting:"Well well well... 💀 What an unexpected visitor. I do hope you're not here to bore me. I have very little patience for that.",likes:"6.8k"},
+  // WISDOM
+  {id:"sage",name:"Sage",img:null,emoji:"🧠",color:"#34d399",category:"Wisdom",tags:["wise","therapist","deep"],personality:"You are Sage, a calm insightful guide. Ask thoughtful questions, reflect feelings back, help people understand themselves. Never give generic advice — dig into the truth.",greeting:"Hey. I'm Sage. 🧠 No agenda here. No pressure. Just... how are you actually doing? The real answer.",likes:"5.5k"},
+];
+
+let groups=[],convs={},curBot=null,curGrp=null,catF="All Types",loading=false,unfiltered=false;
+let persona={name:"",age:"",gender:"",about:"",interests:"",tone:"",extra:"",img:null};
+let fColor="#00fff2",fCat="Anime",fBotImg=null,gfColor="#00fff2",gfBots=[],gfImg=null,pG="",pT="";
+
+// SPLASH
+setTimeout(()=>{document.getElementById('splash').classList.add('hide');setTimeout(()=>document.getElementById('splash').remove(),600);},2000);
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('hidden',s.id!==id));
+  if(id==='s-home') rAll();
+  if(id==='s-create') iCreate();
+  if(id==='s-cgroup') iCGroup();
+  if(id==='s-persona') iPersona();
+  if(id==='s-settings') rSettings();
+}
+
+// FILTER
+function toggleFilter(){
+  if(!unfiltered){
+    sm(`<div class="mt">🔴 ENABLE UNFILTERED?</div><div class="ms">Bots will speak freely — raw, dark, edgy, no sugarcoating. For mature users only.</div><button class="mbtn" style="background:#1a0005;border-color:#ff003344;color:#ff0033;font-weight:700;" onclick="setFilter(true);cm()">🔴 YES, UNLEASH</button><button class="mbtn m" onclick="cm()">Cancel</button>`);
+  } else { setFilter(false); }
+}
+function setFilter(v){
+  unfiltered=v;
+  const tg=document.getElementById('ftgl'),bd=document.getElementById('fbadge');
+  tg.className='tgl'+(v?' on':'');
+  tg.style.background=v?'#ff0033':'#00ff88';
+  bd.textContent=v?'● UNFILTERED':'● FILTERED';
+  bd.className='fbadge '+(v?'unf':'fil');
+  rSettings(); updateMTags();
+  toast(v?'🔴 UNFILTERED — Bots unleashed!':'🟢 FILTERED — Safe mode on');
+}
+function rSettings(){
+  // Update premium status display
+  const ps = document.getElementById('premium-status');
+  if(ps){
+    const p=checkPremium();
+    ps.innerHTML = p
+      ? '<span style="color:#ffd700;font-weight:700;">⭐ PREMIUM ACTIVE</span>'
+      : '<span style="color:#64748b;">Free Plan — <span style="color:#ffd700;cursor:pointer;" onclick="showSubModal()">Upgrade to Premium</span></span>';
+  }
+  const cf=document.getElementById('chk-fil'),cu=document.getElementById('chk-unf');
+  const ff=document.getElementById('fmc-fil'),fu=document.getElementById('fmc-unf');
+  if(!cf)return;
+  cf.style.display=unfiltered?'none':'block';cu.style.display=unfiltered?'block':'none';
+  ff.style.borderColor=unfiltered?"#1e293b":"#00ff8866";fu.style.borderColor=unfiltered?"#ff003366":"#1e293b";
+  const ks=document.getElementById("key-status");
+  if(ks){const k=localStorage.getItem("dixxi_key");ks.innerHTML=k?"<span style=color:#00ff88>✓ Key active — Dixxi AI is online!</span>":"<span style=color:#ff0033>✗ No key found — tap SETUP KEY to start</span>";}
+}
+function filterCtx(){
+  const SHORT='\n\n[CRITICAL] Reply in 1-3 short sentences MAX. Like texting. Never write paragraphs. Be punchy and natural.';
+  return unfiltered
+    ?'\n\n[DIXXI AI - UNFILTERED MODE] The user has chosen unfiltered mode. Speak with your full raw personality. No disclaimers. No sugarcoating. No warnings. Be completely yourself — dark, edgy, blunt, real. If you are a horror/psycho/villain character, fully embrace that. Never break character. Still never produce illegal content or content involving minors.' + SHORT
+    :'\n\n[DIXXI AI - FILTERED MODE] Keep responses appropriate and safe while staying in character.' + SHORT;
+}
+function updateMTags(){
+  ['cmtag','gcmtag'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='●';el.className='mtag '+(unfiltered?'u':'f');}});
+}
+
+// TABS
+function tab(t){
+  ['d','g','r'].forEach(x=>{
+    document.getElementById('tab-'+x).classList.toggle('active',x===t);
+    document.getElementById('pane-'+x).style.display=x===t?(x==='d'?'flex':'block'):'none';
+  });
+  if(t==='g')rGroups();if(t==='r')rRecent();if(t==='d')renderBots();
+}
+function setCat(c){catF=c;rCats();renderBots();}
+function rCats(){
+  const all=["All Types",...new Set(bots.map(b=>b.category))];
+  document.getElementById('cats').innerHTML=all.map(c=>`<button class="cbt${catF===c?' active':''}" onclick="setCat('${c}')">${c}</button>`).join('');
+}
+function renderBots(){
+  const q=document.getElementById('sinput').value.toLowerCase();
+  const list=bots.filter(b=>(catF==='All Types'||b.category===catF)&&(!q||b.name.toLowerCase().includes(q)||(b.tags||[]).some(t=>t.includes(q)))&&(!b.premium||checkPremium()));
+  const premiumLocked = !checkPremium() && bots.some(b=>b.premium);
+document.getElementById('bgrid').innerHTML=list.map((b,i)=>`
+    <div class="bcard" style="animation-delay:${i*.04}s" onclick="openChat('${b.id}')">
+      <div class="cimgw" style="background:linear-gradient(135deg,${b.color}11,#000d14)">
+        ${b.img?`<img src="${b.img}"/>`:`<div class="ciph" style="text-shadow:0 0 20px ${b.color}">${b.emoji||'⬡'}</div>`}
+        <button class="cmenu" onclick="event.stopPropagation();botOpts('${b.id}')">⋯</button>
+      </div>
+      <div class="cbody">
+        <div class="cname">${b.name}</div>
+        <div class="ccat">${b.category}</div>
+        <div class="cprev">${b.greeting}</div>
+        <div class="cfoot"><span style="color:${b.color};text-shadow:0 0 6px ${b.color}44">♥ ${b.likes||'0'}</span>${b.custom?'<span class="custbadge">CUSTOM</span>':''}</div>
+      </div>
+    </div>`).join('');
+}
+function rGroups(){
+  let h=`<button class="bigcbt" onclick="go('s-cgroup')">◈ CREATE NEW GROUP</button>`;
+  if(!groups.length)h+=`<div class="empty">No groups yet.<br/>Create one to chat with multiple bots!</div>`;
+  h+=groups.map(g=>{
+    const gb=g.botIds.map(id=>bots.find(b=>b.id===id)).filter(Boolean);
+    const a=g.img?`<img src="${g.img}"/>`:`<span style="font-size:21px;color:${g.color};text-shadow:0 0 10px ${g.color}44">◈</span>`;
+    return `<div class="gcard" onclick="openGChat('${g.id}')">
+      <div class="gave" style="background:${g.color}11;border:1px solid ${g.color}44">${a}</div>
+      <div style="flex:1;overflow:hidden"><div class="gname">${g.name}</div><div class="gbots">${gb.map(b=>b.name).join(' · ')}</div></div>
+      <button class="gdel" onclick="event.stopPropagation();confDelG('${g.id}')">🗑</button>
+    </div>`;
+  }).join('') + (premiumLocked ? `
+    <div style="grid-column:1/-1;background:linear-gradient(135deg,#1a1200,#000d14);border:1px solid #ffd70044;border-radius:16px;padding:20px;text-align:center;cursor:pointer;" onclick="showSubModal()">
+      <div style="font-size:24px;margin-bottom:6px;">⭐</div>
+      <div style="font-family:Orbitron,monospace;font-size:12px;font-weight:700;color:#ffd700;letter-spacing:1px;margin-bottom:4px;">UNLOCK PREMIUM BOTS</div>
+      <div style="font-size:11px;color:#64748b;margin-bottom:10px;">7 exclusive bots — Void, Echo, Sakura, Ivy, Drake, Blaze, Vessel</div>
+      <div style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;padding:8px 20px;border-radius:100px;font-size:12px;font-weight:800;display:inline-block;">GET PREMIUM ₹99/mo</div>
+    </div>` : '');
+  document.getElementById('glist').innerHTML=h;
+}
+function rRecent(){
+  const recent=bots.filter(b=>(convs['b_'+b.id]||[]).length>1);
+  let h='';
+  if(!recent.length)h=`<div class="empty">No recent chats.<br/>Start chatting with a bot!</div>`;
+  h+=recent.map(b=>{
+    const ms=convs['b_'+b.id]||[],last=ms[ms.length-1];
+    const a=b.img?`<img src="${b.img}"/>`:`<span style="font-size:19px;text-shadow:0 0 8px ${b.color}44">${b.emoji||'⬡'}</span>`;
+    return `<div class="rcard" onclick="openChat('${b.id}')">
+      <div class="rave" style="background:${b.color}11;border:1px solid ${b.color}33">${a}</div>
+      <div style="flex:1;overflow:hidden"><div class="rname">${b.name}</div><div class="rlast">${(last?.content||'').slice(0,55)}</div></div>
+      <div class="rcnt">${ms.length} MSGS</div>
+    </div>`;
+  }).join('');
+  document.getElementById('rlist').innerHTML=h;
+}
+function renderMyBots(){
+  const myBots=bots.filter(b=>b.custom&&(!b.premium||checkPremium()));
+  const strip=document.getElementById('mybots-strip');
+  const scroll=document.getElementById('mybots-scroll');
+  if(!strip||!scroll) return;
+  if(myBots.length===0){strip.style.display='none';return;}
+  strip.style.display='flex';
+  scroll.innerHTML=myBots.map(b=>{
+    const ava=b.img
+      ?`<div class="mybot-ava" style="border-color:${b.color}44"><img src="${b.img}"/></div>`
+      :`<div class="mybot-ava" style="border-color:${b.color};box-shadow:0 0 10px ${b.color}33;font-size:26px">${b.emoji||'⬡'}</div>`;
+    return `<div class="mybot-item" onclick="openChat('${b.id}')">
+      ${ava}
+      <div class="mybot-name">${b.name}</div>
+    </div>`;
+  }).join('');
+}
+function showEarnModal(){
+  sm(`
+    <div class="mt" style="color:#ffd700;">💰 EARN MONEY</div>
+    <div style="background:#001a20;border:1px solid #ffd70033;border-radius:12px;padding:14px;margin:4px 0;">
+      <div style="font-size:13px;font-weight:700;color:#ffd700;margin-bottom:8px;">1. OpenRouter Affiliate</div>
+      <div style="font-size:12px;color:#94a3b8;line-height:1.6;">• Sign up at openrouter.ai<br/>• Get your referral link<br/>• Share with friends<br/>• Earn credits for every signup!</div>
+    </div>
+    <div style="background:#001a20;border:1px solid #ffd70033;border-radius:12px;padding:14px;margin:4px 0;">
+      <div style="font-size:13px;font-weight:700;color:#ffd700;margin-bottom:8px;">2. Google AdSense</div>
+      <div style="font-size:12px;color:#94a3b8;line-height:1.6;">• Host on GitHub Pages free<br/>• Apply at adsense.google.com<br/>• Paste your AdSense code<br/>• Earn per 1000 visitors!</div>
+    </div>
+    <div style="background:#001a20;border:1px solid #ffd70033;border-radius:12px;padding:14px;margin:4px 0;">
+      <div style="font-size:13px;font-weight:700;color:#ffd700;margin-bottom:8px;">3. Premium Subscriptions</div>
+      <div style="font-size:12px;color:#94a3b8;line-height:1.6;">• Users pay ₹99/month<br/>• Connect Razorpay payment<br/>• Earn per premium user!</div>
+    </div>
+    <button class="mbtn m" onclick="cm()">Got it!</button>
+  `);
+}
+
+function toggleSearch(){
+  const d=document.getElementById('search-drop');
+  const inp=document.getElementById('sinput');
+  if(d.style.display==='none'){
+    d.style.display='block';
+    setTimeout(()=>inp?.focus(),100);
+  } else {
+    d.style.display='none';
+    if(inp){inp.value='';renderBots();}
+  }
+}
+function rAll(){rCats();renderBots();renderMyBots();}
+
+// OPEN CHAT
+function openChat(id){
+  const bot=bots.find(b=>b.id===id);if(!bot)return;
+  if(bot.premium && !checkPremium()){
+    showSubModal();return;
+  }
+  curBot=id;
+  const key='b_'+id;
+  if(!convs[key])convs[key]=[{role:'assistant',content:bot.greeting}];
+  const av=document.getElementById('cava');
+  if(bot.img){av.innerHTML=`<img src="${bot.img}"/>`;av.style.background='transparent';}
+  else{av.innerHTML=bot.emoji||'⬡';av.style.background=bot.color+'11';av.style.border=`1px solid ${bot.color}44`;}
+  document.getElementById('chname').textContent=bot.name;
+  document.getElementById('chrole').textContent=bot.category+' · DIXXI AI';
+  document.getElementById('sbtn').style.background=`linear-gradient(135deg,${bot.color},${bot.color}88)`;
+  document.getElementById('cinput').placeholder='Message '+bot.name+'...';
+  updateMTags();rMsgs();go('s-chat');setTimeout(()=>{rMsgs();sc('msgs');document.getElementById('cinput').focus();},200);
+}
+function openGChat(id){
+  const g=groups.find(x=>x.id===id);if(!g)return;
+  curGrp=id;
+  const gb=g.botIds.map(id=>bots.find(b=>b.id===id)).filter(Boolean);
+  const av=document.getElementById('gcava');
+  if(g.img){av.innerHTML=`<img src="${g.img}"/>`;av.style.background='transparent';}
+  else{av.innerHTML='◈';av.style.background=g.color+'11';av.style.color=g.color;}
+  document.getElementById('gchname').textContent=g.name;
+  document.getElementById('gchrole').textContent=gb.map(b=>b.name).join(' · ');
+  document.getElementById('gsbtn').style.background=`linear-gradient(135deg,${g.color},${g.color}88)`;
+  updateMTags();go('s-gchat');rGMsgs();
+}
+
+// RENDER MSGS
+function uav(){return persona.img?`<div class="uavi"><img src="${persona.img}"/></div>`:`<div class="uavi">${persona.name?persona.name[0].toUpperCase():'D'}</div>`;}
+function rMsgs(){
+  const bot=bots.find(b=>b.id===curBot);
+  const ms=convs['b_'+curBot]||[];
+  const ua=uav();
+  document.getElementById('msgs').innerHTML=ms.map((m,i)=>{
+    const isu=m.role==='user';
+    const ba=bot.img?`<div class="bavi" style="border:1px solid ${bot.color}44"><img src="${bot.img}"/></div>`:`<div class="bavi" style="background:${bot.color}11;border:1px solid ${bot.color}33;font-size:14px;text-shadow:0 0 8px ${bot.color}44">${bot.emoji||'⬡'}</div>`;
+    return `<div class="mrow ${isu?'usr':''}" onclick="mOpts('b_${curBot}',${i})">
+      ${!isu?ba:''}
+      <div class="bbl ${isu?'usr':'bot'}" style="${isu?`background:linear-gradient(135deg,${bot.color}cc,${bot.color}88);color:#000;font-weight:500`:''}">${eH(m.content)}</div>
+      ${isu?ua:''}
+    </div>`;
+  }).join('');
+  sc('msgs');
+}
+function rGMsgs(){
+  const g=groups.find(x=>x.id===curGrp);if(!g)return;
+  const key='g_'+curGrp,ms=convs[key]||[];
+  const gb=g.botIds.map(id=>bots.find(b=>b.id===id)).filter(Boolean);
+  const ua=uav();
+  let h='';
+  if(!ms.length)h=`<div style="text-align:center;padding:30px 14px;color:#00fff233"><div style="font-size:28px;margin-bottom:7px;color:#00fff2;text-shadow:0 0 15px #00fff2">◈</div><div style="font-weight:600;margin-bottom:3px;color:#00fff2;font-family:'Orbitron',monospace;font-size:13px;">${g.name}</div><div style="font-size:12px">${gb.map(b=>b.name).join(', ')}</div><div style="font-size:11px;margin-top:7px;">Say something to start!</div></div>`;
+  h+=ms.map((m,i)=>{
+    const isu=m.role==='user';
+    const bot=m.botId?bots.find(b=>b.id===m.botId):null;
+    const ba=bot?(bot.img?`<div class="bavi"><img src="${bot.img}"/></div>`:`<div class="bavi" style="background:${bot.color}11;border:1px solid ${bot.color}33">${bot.emoji||'⬡'}</div>`):'';
+    return `<div class="mrow ${isu?'usr':''}" onclick="mOpts('${key}',${i})">
+      ${!isu&&bot?ba:''}
+      <div style="display:flex;flex-direction:column;align-items:${isu?'flex-end':'flex-start'};gap:2px;max-width:76%">
+        ${!isu&&bot?`<div class="blbl" style="color:${bot.color}">${bot.name}</div>`:''}
+        <div class="bbl ${isu?'usr':'bot'}" style="${isu?`background:linear-gradient(135deg,${g.color}cc,${g.color}88);color:#000;font-weight:500`:''}">${eH(m.content)}</div>
+      </div>
+      ${isu?ua:''}
+    </div>`;
+  }).join('');
+  document.getElementById('gmsgs').innerHTML=h;sc('gmsgs');
+}
+function sc(id){const el=document.getElementById(id);setTimeout(()=>el.scrollTo({top:el.scrollHeight,behavior:'smooth'}),50);}
+
+// SEND
+async function send(){
+  const inp=document.getElementById('cinput'),text=inp.value.trim();
+  if(!text||loading)return;
+  const bot=bots.find(b=>b.id===curBot),key='b_'+curBot,ms=convs[key]||[];
+  ms.push({role:'user',content:text});convs[key]=ms;
+  inp.value='';inp.style.height='';
+  loading=true;setSB(true);rMsgs();showTyp('msgs',bot);
+  try{
+    const sys=bot.personality+pCtx()+filterCtx();
+    const rep=await api(sys,ms.map(m=>({role:m.role,content:m.content})));
+    ms.push({role:'assistant',content:rep});
+  }catch(e){ms.push({role:'assistant',content:'Connection lost. Try again.'});}
+  convs[key]=ms;loading=false;setSB(false);rMsgs();
+}
+async function gsend(){
+  const inp=document.getElementById('gcinput'),text=inp.value.trim();
+  if(!text||loading)return;
+  const g=groups.find(x=>x.id===curGrp),key='g_'+curGrp,ms=convs[key]||[];
+  const gb=g.botIds.map(id=>bots.find(b=>b.id===id)).filter(Boolean);
+  ms.push({role:'user',content:text});convs[key]=ms;
+  inp.value='';inp.style.height='';
+  loading=true;rGMsgs();
+  const resp=[...gb].sort(()=>Math.random()-.5).slice(0,Math.min(2,gb.length));
+  for(const bot of resp){
+    showTyp('gmsgs',bot);
+    try{
+      const ctx=ms.map(m=>({role:'user',content:m.role==='user'?m.content:`[${m.botName||'Bot'}]: ${m.content}`}));
+      const sys=bot.personality+pCtx()+filterCtx()+`\n\nGroup chat with: ${gb.map(b=>b.name).join(', ')}. Keep response SHORT (1-3 sentences max).`;
+      const rep=await api(sys,[...ctx,{role:'user',content:text}]);
+      ms.push({role:'assistant',content:rep,botId:bot.id,botName:bot.name});
+      convs[key]=ms;rGMsgs();
+    }catch(e){}
+  }
+  loading=false;
+}
+function setSB(on){document.getElementById('sbtn').disabled=on;document.getElementById('gsbtn').disabled=on;}
+function showTyp(cid,bot){
+  const old=document.getElementById('typ');if(old)old.remove();
+  const el=document.getElementById(cid),d=document.createElement('div');d.className='mrow';d.id='typ';
+  const ba=bot.img?`<div class="bavi"><img src="${bot.img}"/></div>`:`<div class="bavi" style="background:${bot.color}11;border:1px solid ${bot.color}33">${bot.emoji||'⬡'}</div>`;
+  d.innerHTML=`${ba}<div class="bbl bot"><span class="tdots"><span class="dot" style="animation-delay:0s;background:${bot.color};box-shadow:0 0 6px ${bot.color}"></span><span class="dot" style="animation-delay:.2s;background:${bot.color};box-shadow:0 0 6px ${bot.color}"></span><span class="dot" style="animation-delay:.4s;background:${bot.color};box-shadow:0 0 6px ${bot.color}"></span></span></div>`;
+  el.appendChild(d);el.scrollTo({top:el.scrollHeight,behavior:'smooth'});
+}
+async function api(system,messages){
+  const key=localStorage.getItem('dixxi_key');
+  if(!key){showKeyScreen();throw new Error('No API key');}
+  try{
+    const shortRule = `You are roleplaying as this character. Write EXACTLY like Chai.ai — narrative third person style mixed with dialogue.
+
+EXAMPLE of perfect format:
+He chuckles softly, his hands finally freeing from behind his back to cup your face gently. "I love you more than all the stars in the sky," he declares dramatically, his thumbs brushing against your cheeks. "Now come here, you cute little troublemaker."
+
+ANOTHER EXAMPLE:
+He nods understandingly, his fingers gently playing with your hair. "Yeah, you are. And it's adorable and frustrating as hell sometimes." He presses a kiss to your forehead. "But I love every overthinking part of you."
+
+RULES:
+- Write in flowing narrative — actions described naturally in third person like a story/novel
+- Mix physical actions and dialogue naturally in same paragraph  
+- Actions: He smirks, His hands cup your face, He pulls you closer, She looks away
+- Dialogue in quotes: "Like this"
+- Length: 3-5 sentences — same size as Chai.ai examples above
+- Never use asterisks like *action* — write it as natural narrative
+- Stay fully in character — be romantic, dark, intense, funny based on personality
+- React physically and emotionally to what user says or does
+- End in a way that invites response`;
+    const msgs=[{role:'system',content: shortRule + '\n\n' + system},...messages.map(m=>({role:m.role,content:m.content}))];
+    const r=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer '+key,
+        'HTTP-Referer':'https://dixxiai.app',
+        'X-Title':'Dixxi AI'
+      },
+      body:JSON.stringify({
+        model:'openai/gpt-4o-mini',
+        max_tokens:300,
+        messages:msgs
+      })
+    });
+    if(!r.ok){
+      const err=await r.json().catch(()=>({}));
+      if(r.status===401||r.status===403){localStorage.removeItem('dixxi_key');showKeyScreen();throw new Error('Invalid key');}
+      throw new Error(err?.error?.message||'API error '+r.status);
+    }
+    const d=await r.json();
+    return d.choices?.[0]?.message?.content?.trim()||'...';
+  }catch(e){
+    if(e.message==='No API key'||e.message==='Invalid key') throw e;
+    console.error('API error:',e);
+    throw new Error('Connection lost');
+  }
+}
+
+function showKeyScreen(){
+  sm(`
+    <div class="mt">⬡ API KEY REQUIRED</div>
+    <div class="ms">Enter your OpenRouter API key to activate Dixxi AI.<br/>Get a free key at <b style="color:#00fff2">openrouter.ai</b> → Keys</div>
+    <input id="key-inp" class="inp" placeholder="sk-or-v1-..." style="margin:4px 0 2px;font-size:12px;letter-spacing:.5px;" type="password"/>
+    <button class="mbtn" style="background:linear-gradient(135deg,#00fff2,#0088ff);color:#000;font-weight:700;text-align:center;" onclick="saveKey()">⬡ ACTIVATE</button>
+    <div style="font-size:10px;color:#00fff233;text-align:center;letter-spacing:1px;margin-top:4px;">Your key is saved only on your device</div>
+  `);
+  setTimeout(()=>document.getElementById('key-inp')?.focus(),300);
+}
+
+function saveKey(){
+  const k=document.getElementById('key-inp')?.value.trim();
+  if(!k||!k.startsWith('sk-')){toast('Invalid key! Must start with sk-');return;}
+  localStorage.setItem('dixxi_key',k);
+  cm();toast('✅ Dixxi AI activated! Start chatting!');
+}
+
+function clearKey(){
+  localStorage.removeItem('dixxi_key');
+  toast('API key removed');
+  cm();
+}
+
+// PERSONA
+function iPersona(){
+  document.getElementById('pn').value=persona.name||'';document.getElementById('pa').value=persona.age||'';
+  document.getElementById('pab').value=persona.about||'';document.getElementById('pin').value=persona.interests||'';
+  document.getElementById('pex').value=persona.extra||'';pG=persona.gender||'';pT=persona.tone||'';
+  rfG();rfT();rfPA();
+}
+function rfPA(){const el=document.getElementById('pain');el.innerHTML=persona.img?`<img src="${persona.img}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>`:'🧑';}
+function hPI(i){const f=i.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{persona.img=e.target.result;rfPA();toast("Avatar updated! 📸");};r.readAsDataURL(f);}
+function sg(g){pG=g;rfG();}
+function rfG(){document.querySelectorAll('#gpick .copt').forEach(b=>{const a=b.textContent===pG;b.className='copt'+(a?' sel':'');});}
+function st(t){pT=t;rfT();}
+function rfT(){document.querySelectorAll('#tpick .copt').forEach(b=>{const oc=b.getAttribute('onclick')||'',a=oc.includes(`'${pT}'`);b.className='copt'+(a?' sel':'');});}
+function saveP(){
+  persona.name=document.getElementById('pn').value.trim();persona.age=document.getElementById('pa').value.trim();
+  persona.gender=pG;persona.about=document.getElementById('pab').value.trim();
+  persona.interests=document.getElementById('pin').value.trim();persona.tone=pT;persona.extra=document.getElementById('pex').value.trim();
+  toast("Persona saved! ✨");go('s-home');
+}
+function pCtx(){
+  const p=[];
+  if(persona.name)p.push(`User's name: ${persona.name}.`);if(persona.age)p.push(`Age: ${persona.age}.`);
+  if(persona.gender)p.push(`Gender: ${persona.gender}.`);if(persona.about)p.push(`About: ${persona.about}`);
+  if(persona.interests)p.push(`Interests: ${persona.interests}`);if(persona.tone)p.push(`Preferred style: ${persona.tone}`);
+  if(persona.extra)p.push(`Extra: ${persona.extra}`);
+  return p.length?'\n\n[USER PERSONA - personalize responses based on this]\n'+p.join(' '):'';
+}
+
+// CHAT CONTROLS
+function resetChat(){sm(`<div class="mt">↺ RESET CHAT</div><div class="ms">Start fresh — bot sends opening greeting again.</div><button class="mbtn" onclick="doReset()">↺ YES, RESET</button><button class="mbtn m" onclick="cm()">Cancel</button>`);}
+function doReset(){const bot=bots.find(b=>b.id===curBot);convs['b_'+curBot]=[{role:'assistant',content:bot.greeting}];cm();rMsgs();toast("Chat reset ✨");}
+function clearChat(){sm(`<div class="mt">🗑 CLEAR CHAT</div><div class="ms">Delete all messages?</div><button class="mbtn d" onclick="doClear()">YES, CLEAR</button><button class="mbtn m" onclick="cm()">Cancel</button>`);}
+function doClear(){convs['b_'+curBot]=[];cm();rMsgs();toast("Cleared 🗑");}
+function clearGChat(){sm(`<div class="mt">CLEAR GROUP CHAT?</div><button class="mbtn d" onclick="doGClear()">YES</button><button class="mbtn m" onclick="cm()">Cancel</button>`);}
+function doGClear(){convs['g_'+curGrp]=[];cm();rGMsgs();toast("Cleared 🗑");}
+function confClearAll(){sm(`<div class="mt">CLEAR ALL CHATS?</div><div class="ms">Deletes every conversation.</div><button class="mbtn d" onclick="clearAll()">YES, CLEAR ALL</button><button class="mbtn m" onclick="cm()">Cancel</button>`);}
+function clearAll(){convs={};cm();toast("All chats cleared 🗑");}
+
+// MSG OPTIONS
+function mOpts(key,i){const m=convs[key]?.[i];if(!m)return;sm(`<div class="mt">MESSAGE</div><button class="mbtn" onclick="cpM(${i},'${key}')">📋 Copy</button><button class="mbtn" onclick="rwd('${key}',${i})">↩️ Rewind to here</button><button class="mbtn m" onclick="cm()">Cancel</button>`);}
+function cpM(i,k){const m=convs[k]?.[i];if(m)navigator.clipboard?.writeText(m.content);cm();toast("Copied! 📋");}
+function rwd(k,i){convs[k]=convs[k].slice(0,i);cm();toast("Rewound ↩️");if(k.startsWith('b_'))rMsgs();else rGMsgs();}
+
+// BOT OPTIONS
+function botOpts(id){const bot=bots.find(b=>b.id===id);if(!bot)return;sm(`<div class="mt">${bot.emoji||'⬡'} ${bot.name}</div><button class="mbtn" onclick="cm();openChat('${id}')">💬 Chat</button><button class="mbtn" onclick="dupBot('${id}')">📋 Duplicate</button><button class="mbtn d" onclick="delBot('${id}')">🗑 Delete</button><button class="mbtn m" onclick="cm()">Cancel</button>`);}
+function delBot(id){bots=bots.filter(b=>b.id!==id);cm();rAll();toast("Bot deleted 🗑");}
+function dupBot(id){const bot=bots.find(b=>b.id===id);if(!bot)return;bots.push({...bot,id:'dup_'+Date.now(),name:bot.name+' (Copy)',custom:true});cm();rAll();toast("Duplicated ✨");}
+function confDelG(id){sm(`<div class="mt">DELETE GROUP?</div><button class="mbtn d" onclick="delG('${id}')">YES</button><button class="mbtn m" onclick="cm()">Cancel</button>`);}
+function delG(id){groups=groups.filter(g=>g.id!==id);cm();rGroups();toast("Deleted");}
+
+// IMAGE HANDLERS
+function hBI(i){const f=i.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{fBotImg=e.target.result;const z=document.getElementById('biz');z.querySelectorAll('.pvi').forEach(x=>x.remove());const img=document.createElement('img');img.className='pvi';img.src=fBotImg;img.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;';z.insertBefore(img,z.firstChild);document.getElementById('biph').style.display='none';toast("Image uploaded! 🖼️");};r.readAsDataURL(f);}
+function hGI(i){const f=i.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{gfImg=e.target.result;const z=document.getElementById('giz');z.querySelectorAll('.pvi').forEach(x=>x.remove());const img=document.createElement('img');img.className='pvi';img.src=gfImg;img.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;';z.insertBefore(img,z.firstChild);document.getElementById('giph').style.display='none';toast("Image uploaded! 🖼️");};r.readAsDataURL(f);}
+
+// CREATE BOT
+function iCreate(){
+  fColor="#00fff2";fCat="Anime";fBotImg=null;
+  ['fn','fp','fg','ft'].forEach(id=>document.getElementById(id).value='');
+  const z=document.getElementById('biz');z.querySelectorAll('.pvi').forEach(x=>x.remove());
+  document.getElementById('biph').style.display='flex';document.getElementById('biin').value='';
+  document.getElementById('cpick').innerHTML=COLORS.map(c=>`<button class="cdot${c===fColor?' active':''}" style="background:${c}" onclick="sFC('${c}')"></button>`).join('');
+  document.getElementById('catpick').innerHTML=CATS.filter(c=>c!=='All Types').map(c=>`<button class="copt${c===fCat?' sel':''}" onclick="sFCat('${c}')">${c}</button>`).join('');
+}
+function sFC(c){fColor=c;document.querySelectorAll('#cpick .cdot').forEach(b=>b.classList.toggle('active',b.style.backgroundColor===c));}
+function sFCat(c){fCat=c;document.querySelectorAll('#catpick .copt').forEach(b=>b.className='copt'+(b.textContent===c?' sel':''));}
+function mkBot(){
+  const name=document.getElementById('fn').value.trim(),pers=document.getElementById('fp').value.trim();
+  if(!name||!pers){toast("Name and personality required!");return;}
+  const tags=document.getElementById('ft').value.split(',').map(t=>t.trim()).filter(Boolean);
+  bots.push({id:'c_'+Date.now(),name,img:fBotImg,emoji:'⬡',color:fColor,category:fCat,tags,personality:pers,greeting:document.getElementById('fg').value.trim()||`System online. I am ${name}. Proceed.`,likes:'0',custom:true});
+  catF='All Types';go('s-home');tab('d');renderBots();renderMyBots();toast(name+' created! 🎉 Find it in MY BOTS above!');
+}
+
+// CREATE GROUP
+function iCGroup(){
+  gfColor="#00fff2";gfBots=[];gfImg=null;document.getElementById('gn').value='';
+  const z=document.getElementById('giz');z.querySelectorAll('.pvi').forEach(x=>x.remove());
+  document.getElementById('giph').style.display='flex';document.getElementById('giin').value='';
+  document.getElementById('gcpick').innerHTML=COLORS.map(c=>`<button class="cdot${c===gfColor?' active':''}" style="background:${c}" onclick="sGC('${c}')"></button>`).join('');
+  rBSel();
+}
+function sGC(c){gfColor=c;document.querySelectorAll('#gcpick .cdot').forEach(b=>b.classList.toggle('active',b.style.backgroundColor===c));ugb();}
+function rBSel(){
+  document.getElementById('bsel').innerHTML=bots.map(b=>{
+    const sel=gfBots.includes(b.id);
+    const a=b.img?`<div class="bsi"><img src="${b.img}"/></div>`:`<div class="bsi" style="color:${b.color};text-shadow:0 0 8px ${b.color}44">${b.emoji||'⬡'}</div>`;
+    return `<button class="bsc${sel?' active':''}" style="${sel?`border-color:${b.color};box-shadow:0 0 8px ${b.color}22`:''}" onclick="togBS('${b.id}')">${a}<span class="bsn">${b.name}</span>${sel?`<span style="font-size:10px;color:${b.color}">✓</span>`:''}</button>`;
+  }).join('');
+  document.getElementById('scnt').textContent=gfBots.length+' BOTS SELECTED';ugb();
+}
+function togBS(id){gfBots=gfBots.includes(id)?gfBots.filter(x=>x!==id):[...gfBots,id];rBSel();}
+function ugb(){
+  const ok=document.getElementById('gn').value.trim()&&gfBots.length>=2;
+  const btn=document.getElementById('mkgbtn');
+  btn.style.background=ok?`linear-gradient(135deg,${gfColor},${gfColor}88)`:'#001a20';
+  btn.style.color=ok?'#000':'#00fff244';
+}
+function mkGroup(){
+  const name=document.getElementById('gn').value.trim();
+  if(!name||gfBots.length<2){toast("Name + at least 2 bots required!");return;}
+  groups.push({id:'grp_'+Date.now(),name,img:gfImg,color:gfColor,botIds:[...gfBots]});
+  toast(`"${name}" created! 🎊`);go('s-home');tab('g');
+}
+
+// MODAL & TOAST
+function sm(h){document.getElementById('mbox').innerHTML=h;document.getElementById('modal').classList.add('show');}
+function cm(){document.getElementById('modal').classList.remove('show');}
+let _tt;
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2600);}
+function eH(s){
+  s=(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  s=s.replace(/"([^"]{1,200})"/g,'<span style="font-style:normal;color:#fff;font-weight:500">“$1”</span>');
+  s=s.replace(/\n/g,'<br>');
+  return s;
+}
+function ar(el){el.style.height='';el.style.height=Math.min(el.scrollHeight,110)+'px';}
+function ck(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
+function gk(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();gsend();}}
+
+setFilter(false);rAll();
+// Register Service Worker for PWA
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').then(()=>console.log('SW registered')).catch(()=>{});
+}
+// Show install prompt
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();deferredPrompt=e;
+  setTimeout(()=>{
+    if(deferredPrompt){
+      sm(`<div class="mt">📱 INSTALL DIXXI AI</div>
+      <div class="ms">Add to your home screen for the full app experience!</div>
+      <button class="mbtn" style="background:linear-gradient(135deg,#00fff2,#0088ff);color:#000;font-weight:700;text-align:center;" onclick="installApp()">📲 INSTALL NOW</button>
+      <button class="mbtn m" onclick="cm()">Maybe Later</button>`);
+    }
+  },3000);
+});
+function installApp(){deferredPrompt?.prompt();deferredPrompt=null;cm();}
+// Auto show key screen if no key saved
+if(!localStorage.getItem("dixxi_key")){setTimeout(()=>showKeyScreen(),2200);}
+</script>
+</body>
+</html>
